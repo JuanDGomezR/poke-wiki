@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokéWiki - Tu Guía Pokémon</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container header-content">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
+          alt="Poké Ball"
+          class="logo-icon"
+        />
+        <h1>PokéWiki</h1>
+        <nav>
+          <ul>
+            <li><a href="#pokemon-section">Pokémon</a></li>
+            <li><a href="#explore-section">Explora Más</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="pokemon-section" class="main-section">
+        <h2 class="section-title">Encuentra a tu Pokémon</h2>
+        <div class="filters-container" id="filtersContainer">
+          <div class="filter-group">
+            <label for="searchInput" class="sr-only">Buscar Pokémon</label>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Busca por nombre..."
+            />
+          </div>
+          <div class="filter-group">
+            <h4>Filtrar por Tipo:</h4>
+            <div id="typeFilters" class="type-filter-buttons"></div>
+          </div>
+          <div class="filter-group">
+            <label for="generationFilter">Generación:</label>
+            <select id="generationFilter">
+              <option value="all">Todas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="regionFilter">Región Principal:</label>
+            <select id="regionFilter">
+              <option value="all">Todas</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="loadingMessage" class="loading-message">
+          <i class="fas fa-spinner fa-spin"></i> Cargando Pokémon...
+        </div>
+
+        <div id="pokemonGrid" class="pokemon-grid"></div>
+
+        <div class="pagination-controls" id="paginationControls">
+          <button id="prevPageBtn">
+            <i class="fas fa-arrow-left"></i> Anterior
+          </button>
+          <span id="pageInfo">Página 1 de 1</span>
+          <input type="number" id="pageInput" value="1" min="1" />
+          <button id="goToPageBtn">Ir</button>
+          <button id="nextPageBtn">
+            Siguiente <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <section id="explore-section" class="main-section">
+        <h2 class="section-title">Explora más el Mundo Pokémon</h2>
+        <div class="data-cards-grid">
+          <div class="data-card" data-section="locations">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3>Ubicaciones</h3>
+            <p>Descubre los lugares de cada región.</p>
+          </div>
+          <div class="data-card" data-section="berries">
+            <i class="fas fa-apple-alt"></i>
+            <h3>Bayas</h3>
+            <p>Conoce las diferentes bayas y sus efectos.</p>
+          </div>
+          <div class="data-card" data-section="items">
+            <i class="fas fa-bag-shopping"></i>
+            <h3>Objetos</h3>
+            <p>Explora todos los objetos del mundo Pokémon.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          &copy; 2024 PokéWiki. Todos los derechos reservados. Datos de
+          <a href="https://pokeapi.co/" target="_blank">PokéAPI</a>.
+        </p>
+      </div>
+    </footer>
+
+    <div id="pokemonDetailModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <div id="pokemonDetailContent" class="modal-body"></div>
+      </div>
+    </div>
+
+    <div id="detailSectionModal" class="modal">
+      <div class="modal-content large-modal">
+        <span class="close-button">&times;</span>
+        <h2 id="detailSectionTitle" class="modal-title"></h2>
+        <div id="detailSectionContent" class="modal-body"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
