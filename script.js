@@ -26,14 +26,12 @@ const detailSectionContent = document.getElementById("detailSectionContent");
 
 let currentPage = 1;
 let allPokemons = [];
-let detailedPokemonsCache = new Map(); // Caché para detalles completos de Pokémon
+let detailedPokemonsCache = new Map();
 let allGenerations = [];
 let allRegions = [];
-let allItems = []; // Caché para todos los ítems
-let allBerries = []; // Caché para todas las bayas
-// let allMachines = []; // Eliminado: Caché para todas las máquinas
+let allItems = [];
+let allBerries = [];
 
-// La lista de Pokémon actualmente mostrada después de aplicar filtros
 let displayedPokemons = [];
 
 let currentFilters = {
@@ -140,7 +138,7 @@ function getAbilityTypeInfo(abilityName) {
   return { typeClass, icon };
 }
 
-// Mapeo de tipos a iconos de FontAwesome
+// Mapeo de tipos a iconos
 const typeIcons = {
   normal: "fas fa-circle",
   fire: "fas fa-fire",
@@ -169,11 +167,7 @@ function getTypeIcon(type) {
   return typeIcons[type.toLowerCase()] || "fas fa-question-circle";
 }
 
-// --- API Fetching Functions ---
-
-/**
- * Fetches all Pokémon names and URLs.
- */
+/* Busqueda de todos los pokémon.*/
 async function fetchAllPokemonNamesAndUrls() {
   try {
     const response = await fetch(
@@ -204,10 +198,6 @@ async function fetchAllPokemonNamesAndUrls() {
   }
 }
 
-/**
- * Fetches complete details for a single Pokémon.
- * Uses a cache to avoid repeated API calls.
- */
 async function fetchPokemonDetails(id) {
   if (detailedPokemonsCache.has(id)) {
     return detailedPokemonsCache.get(id);
@@ -220,7 +210,6 @@ async function fetchPokemonDetails(id) {
     }
     const data = await response.json();
 
-    // Get generation and region from species data
     const speciesResponse = await fetch(data.species.url);
     const speciesData = await speciesResponse.json();
     let generationName = "unknown";
@@ -256,9 +245,6 @@ async function fetchPokemonDetails(id) {
   }
 }
 
-/**
- * Fetches all available Pokémon types.
- */
 async function fetchTypes() {
   try {
     const response = await fetch(`${POKEAPI_BASE_URL}type`);
@@ -276,7 +262,7 @@ async function fetchTypes() {
 }
 
 /**
- * Fetches all Pokémon generations.
+ * Busqueda de generaciones Pokémon.
  */
 async function fetchGenerations() {
   try {
@@ -307,7 +293,7 @@ async function fetchGenerations() {
 }
 
 /**
- * Fetches all Pokémon regions.
+ * Busqueda de regiones Pokémon.
  */
 async function fetchRegions() {
   try {
@@ -328,7 +314,7 @@ async function fetchRegions() {
   }
 }
 
-// --- Dynamic Content Functions (Locations, Berries, Items) ---
+// --- Funcion de contenido dinámico ---
 
 async function fetchAllItems() {
   if (allItems.length > 0) return allItems;
@@ -460,14 +446,6 @@ async function fetchAndDisplayItems() {
     `;
   detailSectionModal.style.display = "flex";
 }
-
-// Eliminado: fetchAllMachines y fetchAndDisplayMachines
-
-// --- Rendering Functions ---
-
-/**
- * Creates and appends a Pokémon card to the grid.
- */
 function createPokemonCard(pokemon) {
   const card = document.createElement("div");
   card.classList.add("pokemon-card");
@@ -492,9 +470,6 @@ function createPokemonCard(pokemon) {
   pokemonGrid.appendChild(card);
 }
 
-/**
- * Displays the detailed information of a Pokémon in the modal.
- */
 function showPokemonDetail(pokemon) {
   const artworkSrc =
     pokemon.sprites.other["official-artwork"]?.front_default ||
@@ -563,9 +538,6 @@ function showPokemonDetail(pokemon) {
   pokemonDetailModal.style.display = "flex";
 }
 
-/**
- * Renders the Pokémon grid with the given list of Pokémon.
- */
 function renderPokemonGrid(pokemonsToDisplay) {
   pokemonGrid.innerHTML = "";
   if (pokemonsToDisplay.length === 0) {
@@ -576,9 +548,6 @@ function renderPokemonGrid(pokemonsToDisplay) {
   pokemonsToDisplay.forEach((pokemon) => createPokemonCard(pokemon));
 }
 
-/**
- * Populates the type filter buttons.
- */
 async function populateTypeFilters() {
   const types = await fetchTypes();
   typeFiltersContainer.innerHTML = "";
@@ -606,9 +575,6 @@ async function populateTypeFilters() {
   });
 }
 
-/**
- * Populates the generation filter dropdown.
- */
 async function populateGenerationFilter() {
   generationFilterSelect.innerHTML =
     '<option value="all">Todas las Generaciones</option>';
@@ -623,9 +589,6 @@ async function populateGenerationFilter() {
   });
 }
 
-/**
- * Populates the region filter dropdown.
- */
 async function populateRegionFilter() {
   regionFilterSelect.innerHTML =
     '<option value="all">Todas las Regiones</option>';
@@ -637,9 +600,6 @@ async function populateRegionFilter() {
   });
 }
 
-/**
- * Updates the active state of filter buttons.
- */
 function updateFilterButtons(container, activeValue) {
   container.querySelectorAll("button").forEach((button) => {
     if (button.dataset.type === activeValue) {
@@ -650,11 +610,6 @@ function updateFilterButtons(container, activeValue) {
   });
 }
 
-// --- Filtering and Pagination Logic ---
-
-/**
- * Applies current filters to the list of Pokémon and re-renders.
- */
 async function applyFilters() {
   showLoadingMessage();
   displayedPokemons = [];
@@ -694,9 +649,6 @@ async function applyFilters() {
   hideLoadingMessage();
 }
 
-/**
- * Renders the Pokémon for the current page.
- */
 function renderCurrentPage() {
   const startIndex = (currentPage - 1) * POKEMONS_PER_PAGE;
   const endIndex = startIndex + POKEMONS_PER_PAGE;
@@ -706,9 +658,6 @@ function renderCurrentPage() {
   pageInput.value = currentPage;
 }
 
-/**
- * Updates the pagination buttons and info.
- */
 function updatePaginationControls() {
   const totalPages = Math.ceil(displayedPokemons.length / POKEMONS_PER_PAGE);
   pageInfoSpan.textContent = `Página ${currentPage} de ${totalPages || 1}`;
@@ -719,8 +668,6 @@ function updatePaginationControls() {
   pageInput.min = 1;
   goToPageBtn.disabled = totalPages <= 1;
 }
-
-// --- Loading UI Helpers ---
 
 function showLoadingMessage() {
   loadingMessage.style.display = "block";
@@ -744,8 +691,6 @@ function showLoadingOverlay(targetElement) {
         </div>
     `;
 }
-
-// --- Event Listeners ---
 
 prevPageBtn.addEventListener("click", () => {
   if (currentPage > 1) {
@@ -836,7 +781,6 @@ detailSectionCloseButton.addEventListener("click", () => {
   detailSectionModal.style.display = "none";
 });
 
-// Event listeners for other data cards (Explora más el Mundo Pokémon)
 dataCards.forEach((card) => {
   card.addEventListener("click", () => {
     const section = card.dataset.section;
@@ -850,16 +794,11 @@ dataCards.forEach((card) => {
       case "items":
         fetchAndDisplayItems();
         break;
-      // case 'machines': // Eliminado: Ya no se manejará esta sección
-      //     fetchAndDisplayMachines();
-      //     break;
       default:
         console.warn("Unknown section clicked:", section);
     }
   });
 });
-
-// --- Initialization ---
 
 document.addEventListener("DOMContentLoaded", async () => {
   showLoadingMessage();
@@ -871,7 +810,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       fetchRegions(),
       fetchAllItems(),
       fetchAllBerries(),
-      // Eliminado: fetchAllMachines()
     ]);
 
     await populateTypeFilters();
